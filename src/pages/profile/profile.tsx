@@ -1,12 +1,24 @@
+import { Preloader } from '@ui';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { updateUser } from '../../services/user/userSlice';
+import { selectUser } from '../../services/user/userSelectors';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const userData = useSelector(selectUser);
+
+  if (userData.isLoading) {
+    return <Preloader />;
+  }
+
+  if (!userData.user) {
+    return <Navigate to='/' replace />;
+  }
+
+  const user = userData.user;
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -29,6 +41,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(updateUser({ ...formValue }));
   };
 
   const handleCancel = (e: SyntheticEvent) => {

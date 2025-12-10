@@ -1,14 +1,33 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { TTabMode } from '@utils-types';
+import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { getIngredients } from '../../services/ingredients/ingredientsSlice';
+import { useDispatch, useSelector } from '../../services/store';
+import { Preloader } from '@ui';
+import { Modal } from '../modal';
+import { selectIngredients } from '../../services/ingredients/ingredientsSelectors';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const dispatch = useDispatch();
+  const ingredients = useSelector(selectIngredients);
+
+  if (ingredients.isLoading) {
+    return <Preloader />;
+  }
+
+  if (ingredients.error) {
+    return (
+      <Modal title='Ошибка' onClose={() => dispatch(getIngredients())}>
+        <p>{ingredients.error}</p>
+      </Modal>
+    );
+  }
+
+  const buns: TIngredient[] = ingredients.buns;
+  const mains: TIngredient[] = ingredients.mains;
+  const sauces: TIngredient[] = ingredients.sauces;
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -46,8 +65,6 @@ export const BurgerIngredients: FC = () => {
     if (tab === 'sauce')
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  return null;
 
   return (
     <BurgerIngredientsUI
