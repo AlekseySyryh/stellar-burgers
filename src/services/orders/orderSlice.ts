@@ -2,16 +2,19 @@ import { getOrderByNumberApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { RootState } from '../store';
+import { clearConstructor } from '../burgerConstructor/burgerConstructorSlice';
 
 interface OrderData {
-  order: TOrder | null;
+  selectedOrder: TOrder | null;
+  placedOrder: TOrder | null;
   isLoading: boolean;
   error: string | null;
   name: string | null;
 }
 
 const initialState: OrderData = {
-  order: null,
+  selectedOrder: null,
+  placedOrder: null,
   isLoading: false,
   error: null,
   name: null
@@ -34,14 +37,20 @@ export const getOrder = createAsyncThunk(
 
 export const placeOrder = createAsyncThunk(
   'order/place',
-  async (data: string[], { rejectWithValue }) => {
+  async (data: string[], { rejectWithValue, dispatch }) => {
     try {
-      return await orderBurgerApi(data);
+      const result = await orderBurgerApi(data);
+      if (result.success) {
+        dispatch(clearConstructor());
+        return result;
+      } else {
+        return rejectWithValue('Ошибка размещения заказа');
+      }
     } catch (err: any) {
       if ('message' in err) {
-        return rejectWithValue(`Ошибка загрузки заказа: ${err.message}`);
+        return rejectWithValue(`Ошибка размещения заказа: ${err.message}`);
       } else {
-        return rejectWithValue('Ошибка загрузки заказа');
+        return rejectWithValue('Ошибка размещения заказа');
       }
     }
   }
@@ -51,8 +60,11 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    clearOrder: (state) => {
-      state.order = null;
+    clearSelectedOrder: (state) => {
+      state.selectedOrder = null;
+    },
+    clearPlacedOrder: (state) => {
+      state.placedOrder = null;
     }
   },
   extraReducers: (builder) => {
@@ -69,7 +81,7 @@ const orderSlice = createSlice({
         } else if (payload.orders.length != 1) {
           state.error = `Неверное количество заказов в запросе ${payload.orders.length} (ожидается 1)`;
         } else {
-          state.order = payload.orders[0];
+          state.selectedOrder = payload.orders[0];
         }
       })
       .addCase(getOrder.rejected, (state, { payload }) => {
@@ -83,7 +95,7 @@ const orderSlice = createSlice({
       })
       .addCase(placeOrder.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.order = payload.order;
+        state.placedOrder = payload.order;
         state.name = payload.name;
       })
       .addCase(placeOrder.rejected, (state, { payload }) => {
@@ -93,6 +105,6 @@ const orderSlice = createSlice({
   }
 });
 
-export const { clearOrder } = orderSlice.actions;
+export const { clearSelectedOrder, clearPlacedOrder } = orderSlice.actions;
 
 export const orderReducer = orderSlice.reducer;

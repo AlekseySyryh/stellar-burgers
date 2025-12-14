@@ -15,7 +15,7 @@ import styles from './app.module.css';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getIngredients } from '../../services/ingredients/ingredientsSlice';
 import { ProtectedRoute } from '../protectedRoute/protectedRoute';
 import { getUser } from '../../services/user/userSlice';
@@ -24,6 +24,7 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -108,8 +109,8 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='' onClose={onClose}>
-                <OrderInfo />
+              <Modal title={title} numericTitleStyle onClose={onClose}>
+                <OrderInfo setTitle={setTitle} />
               </Modal>
             }
           />
@@ -125,8 +126,8 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute mustBeAuthenticated>
-                <Modal title='' onClose={onClose}>
-                  <OrderInfo />
+                <Modal title={title} numericTitleStyle onClose={onClose}>
+                  <OrderInfo setTitle={setTitle} />
                 </Modal>
               </ProtectedRoute>
             }

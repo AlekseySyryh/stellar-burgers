@@ -7,8 +7,9 @@ import { getOrder } from '../../services/orders/orderSlice';
 import { selectAllIngredients } from '../../services/ingredients/ingredientsSelectors';
 import { useParams } from 'react-router-dom';
 import { selectGetOrder } from '../../services/orders/orderSelectors';
+import { TModalChild } from '../ui/modal/type';
 
-export const OrderInfo: FC = () => {
+export const OrderInfo: FC<TModalChild> = (props: TModalChild) => {
   const num = useParams<{ number: string }>();
 
   const dispatch = useDispatch();
@@ -20,10 +21,17 @@ export const OrderInfo: FC = () => {
   }, [num]);
 
   const getOrderData = useSelector(selectGetOrder);
-
   const ingredientsData = useSelector(selectAllIngredients);
 
-  const orderData = getOrderData.order;
+  useEffect(() => {
+    if (props?.setTitle && getOrderData?.selectedOrder?.number) {
+      props.setTitle(
+        `#${String(getOrderData.selectedOrder.number).padStart(6, '0')}`
+      );
+    }
+  }, [getOrderData?.selectedOrder?.number, props?.setTitle]);
+
+  const orderData = getOrderData.selectedOrder;
   const ingredients = ingredientsData.ingredients;
 
   /* Готовим данные для отображения */

@@ -1,9 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
 import { PageUIProps } from '../common-type';
+import { TRegisterData } from '@api';
 
-export type RegisterUIProps = PageUIProps & {
-  password: string;
-  userName: string;
-  setPassword: Dispatch<SetStateAction<string>>;
-  setUserName: Dispatch<SetStateAction<string>>;
-};
+export type RegisterUIProps = PageUIProps<TRegisterData>;

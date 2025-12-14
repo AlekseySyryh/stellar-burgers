@@ -5,16 +5,18 @@ import { loginUser } from '../../services/user/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
 import { Preloader } from '@ui';
 import { selectUser } from '../../services/user/userSelectors';
+import { useForm } from '../../hooks/useForm';
+import { TLoginData } from '@api';
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [pageData, onChange] = useForm<TLoginData>({ email: '', password: '' });
+
   const dispatch = useDispatch();
   const userData = useSelector(selectUser);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    dispatch(loginUser(pageData));
   };
 
   if (userData.isLoading) {
@@ -24,10 +26,8 @@ export const Login: FC = () => {
   return (
     <LoginUI
       errorText={userData?.loginError}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
+      pageData={pageData}
+      handleChange={onChange}
       handleSubmit={handleSubmit}
     />
   );
