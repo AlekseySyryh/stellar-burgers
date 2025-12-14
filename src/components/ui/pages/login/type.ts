@@ -1,7 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
 import { PageUIProps } from '../common-type';
+import { TLoginData } from '@api';
 
-export type LoginUIProps = PageUIProps & {
-  password: string;
-  setPassword: Dispatch<SetStateAction<string>>;
-};
+export type LoginUIProps = PageUIProps<TLoginData>;

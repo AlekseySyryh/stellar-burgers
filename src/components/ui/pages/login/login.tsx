@@ -9,12 +9,10 @@ import { Link } from 'react-router-dom';
 import { LoginUIProps } from './type';
 
 export const LoginUI: FC<LoginUIProps> = ({
-  email,
-  setEmail,
+  pageData,
+  handleChange,
   errorText,
-  handleSubmit,
-  password,
-  setPassword
+  handleSubmit
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
@@ -29,8 +27,8 @@ export const LoginUI: FC<LoginUIProps> = ({
             <Input
               type='email'
               placeholder='E-mail'
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
+              onChange={handleChange}
+              value={pageData.email}
               name='email'
               error={false}
               errorText=''
@@ -39,8 +37,8 @@ export const LoginUI: FC<LoginUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
+              onChange={handleChange}
+              value={pageData.password}
               name='password'
             />
           </div>
