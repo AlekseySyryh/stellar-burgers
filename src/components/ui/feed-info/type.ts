@@ -8,6 +8,7 @@ export type HalfColumnProps = {
   orders: number[];
   title: string;
   textColor?: string;
+  name: string;
 };
 
 export type TColumnProps = {

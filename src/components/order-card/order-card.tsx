@@ -15,10 +15,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   const { ingredients, isLoading } = useSelector(selectAllIngredients);
 
-  if (isLoading) {
-    return <Preloader />;
-  }
-
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 
@@ -51,7 +47,11 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
       total,
       date
     };
-  }, [order, ingredients]);
+  }, [isLoading, order, ingredients]);
+
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   if (!orderInfo) return null;
 
