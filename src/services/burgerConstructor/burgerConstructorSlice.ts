@@ -81,4 +81,4 @@ export const {
   clearConstructor
 } = burgerConstructorSlice.actions;
 
-export const constuctorReducer = burgerConstructorSlice.reducer;
+export const constructorReducer = burgerConstructorSlice.reducer;

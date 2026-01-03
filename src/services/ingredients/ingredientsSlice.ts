@@ -64,7 +64,6 @@ const ingredientsSlice = createSlice({
       });
   }
 });
-
 export const { selectIngredient } = ingredientsSlice.actions;
 
 export const ingredientsReducer = ingredientsSlice.reducer;
