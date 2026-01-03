@@ -1,3 +1,4 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { feedReducer, getFeed } from "./feedSlice";
 
 describe('Тесты редюсера feedReducer', () => {
@@ -140,5 +141,66 @@ describe('Тесты редюсера feedReducer', () => {
     });
 
     expect(actualState).toEqual(expectedState);
+  });
+
+  test('getFeed', async () => {
+    const expectedOrders = [
+      {
+            _id: "695935b8a64177001b325d26",
+            ingredients: [
+                "643d69a5c3f7b9001cfa093d",
+                "643d69a5c3f7b9001cfa093e",
+                "643d69a5c3f7b9001cfa0943",
+                "643d69a5c3f7b9001cfa093d"
+            ],
+            status: "done",
+            name: "Space флюоресцентный люминесцентный бургер",
+            createdAt: "2026-01-03T15:28:56.930Z",
+            updatedAt: "2026-01-03T15:28:57.175Z",
+            number: 98316
+        },
+        {
+            _id: "69593371a64177001b325d24",
+            ingredients: [
+                "643d69a5c3f7b9001cfa093d",
+                "643d69a5c3f7b9001cfa093e",
+                "643d69a5c3f7b9001cfa0943",
+                "643d69a5c3f7b9001cfa093d"
+            ],
+            status: "done",
+            name: "Space флюоресцентный люминесцентный бургер",
+            createdAt: "2026-01-03T15:19:13.286Z",
+            updatedAt: "2026-01-03T15:19:13.518Z",
+            number: 98315
+        }
+      ];
+    const expectTotal = 22310;
+    const expectedTotalToday = 20;
+    
+    const expectedResult = {
+      success: true,
+      orders: expectedOrders,
+      total: expectTotal,
+      totalToday: expectedTotalToday
+    }
+  
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(expectedResult),
+      })
+    ) as jest.Mock;
+  
+    const store = configureStore({
+      reducer: { feed: feedReducer }
+    });
+  
+    await store.dispatch(getFeed());
+  
+    const { orders, total, totalToday } = store.getState().feed;
+        
+    expect(orders).toEqual(expectedOrders);
+    expect(total).toEqual(expectTotal);
+    expect(totalToday).toEqual(expectedTotalToday);
   });
 });

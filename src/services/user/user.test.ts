@@ -1,3 +1,4 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { getUser, loginUser, logoutUser, registerUser, updateUser, userReducer } from "./userSlice";
 
 describe('Тесты редюсера userReducer', () => {
@@ -388,5 +389,155 @@ describe('Тесты редюсера userReducer', () => {
     })
     
     expect(actualState).toEqual(expectedState);
+  });
+
+  test('getUser', async () => {
+      const expectedUser = {
+        email: "email",
+        name: "name"
+      };
+  
+      const expectedResult = {
+        success: true,
+        user: expectedUser
+      };
+  
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(expectedResult)
+        })
+      ) as jest.Mock;
+  
+      const store = configureStore({
+        reducer: { users: userReducer }
+      });
+  
+      await store.dispatch(getUser());
+  
+      const { user } = store.getState().users;
+  
+      expect(user).toEqual(expectedUser);
+  });
+
+  test('loginUser', async () => {
+      const expectedUser = {
+        email: "email",
+        name: "name"
+      };
+  
+      const expectedResult = {
+        success: true,
+        user: expectedUser
+      };
+  
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(expectedResult)
+        })
+      ) as jest.Mock;
+  
+      const store = configureStore({
+        reducer: { users: userReducer }
+      });
+  
+      await store.dispatch(loginUser({
+        email: "email",
+        password: "password"
+      }));
+  
+      const { user } = store.getState().users;
+  
+      expect(user).toEqual(expectedUser);
+  });
+
+  test('logoutUser', async () => {  
+      const expectedResult = {
+        success: true
+      };
+  
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(expectedResult)
+        })
+      ) as jest.Mock;
+  
+      const store = configureStore({
+        reducer: { users: userReducer }
+      });
+  
+      await store.dispatch(logoutUser());
+  
+      const { user } = store.getState().users;
+  
+      expect(user).toEqual(null);
+  });
+
+  test('registerUser', async () => {
+      const expectedUser = {
+        email: "email",
+        name: "name"
+      };
+  
+      const expectedResult = {
+        success: true,
+        user: expectedUser
+      };
+  
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(expectedResult)
+        })
+      ) as jest.Mock;
+  
+      const store = configureStore({
+        reducer: { users: userReducer }
+      });
+  
+      await store.dispatch(registerUser({
+        email: "email",
+        name: "name",
+        password: "password"
+      }));
+  
+      const { user } = store.getState().users;
+  
+      expect(user).toEqual(expectedUser);
+  });
+
+  test('registerUser', async () => {
+    const expectedUser = {
+      email: "email",
+      name: "name"
+    };
+  
+    const expectedResult = {
+      success: true,
+      user: expectedUser
+    };
+  
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(expectedResult)
+      })
+    ) as jest.Mock;
+  
+    const store = configureStore({
+      reducer: { users: userReducer }
+    });
+  
+    await store.dispatch(updateUser({
+      email: "email",
+      name: "name",
+      password: "password"
+    }));
+  
+    const { user } = store.getState().users;
+  
+    expect(user).toEqual(expectedUser);
   });
 });

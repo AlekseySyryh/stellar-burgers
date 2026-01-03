@@ -1,3 +1,4 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { getIngredients, ingredientsReducer, selectIngredient } from "./ingredientsSlice";
 
 describe('Тесты редюсера ingredientsReducer', () => {
@@ -226,9 +227,70 @@ describe('Тесты редюсера ingredientsReducer', () => {
 
     expect(actualState).toEqual(expectedState);
   });
+
+  test('getIngredients', async () => {
+    const expected = [
+      {
+        _id: 'id1',
+        name: 'name1',
+        type: 'main',
+        proteins: 1,
+        fat: 2,
+        carbohydrates: 3,
+        calories: 4,
+        price: 5,
+        image: '',
+        image_large: '',
+        image_mobile: ''
+      },
+      {
+        _id: 'id2',
+        name: 'name2',
+        type: 'main',
+        proteins: 1,
+        fat: 2,
+        carbohydrates: 3,
+        calories: 4,
+        price: 5,
+        image: '',
+        image_large: '',
+        image_mobile: ''
+      },
+      {
+        _id: 'id3',
+        name: 'name3',
+        type: 'main',
+        proteins: 1,
+        fat: 2,
+        carbohydrates: 3,
+        calories: 4,
+        price: 5,
+        image: '',
+        image_large: '',
+        image_mobile: ''
+      }          
+    ];
+
+    const expectedResult = {
+      success: true,
+      data: expected
+    }
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(expectedResult),
+      })
+    ) as jest.Mock;
+
+    const store = configureStore({
+      reducer: { ingredients: ingredientsReducer }
+    });
+
+    await store.dispatch(getIngredients());
+
+    const { ingredients } = store.getState().ingredients;
+      
+    expect(ingredients).toEqual(expected);
+  });
 });
-
-/*
-getIngredients
-
-    */
