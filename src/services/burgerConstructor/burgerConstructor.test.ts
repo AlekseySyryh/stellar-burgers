@@ -1,47 +1,29 @@
 import { TIngredient } from '@utils-types';
-import { addIngredient, clearConstructor, constructorReducer, moveIngredientDown, moveIngredientUp, removeIngredient } from './burgerConstructorSlice';
+import {
+  addIngredient,
+  clearConstructor,
+  constructorReducer,
+  moveIngredientDown,
+  moveIngredientUp,
+  removeIngredient,
+  initialState as burgerInitialState
+} from './burgerConstructorSlice';
+import { bun1, bun2, main1, main2, main3 } from '../mockdata';
 
 describe('Тесты редюсера constructorReducer', () => {
   test('addIngredient(bun add)', () => {
-    const initialState = {
-      constructorItems: {
-        bun: null,
-        ingredients: []
-      },
-      error: null
-    };
-    const addon: TIngredient = {
-      _id: 'id',
-      name: 'name',
-      type: 'bun',
-      proteins: 1,
-      fat: 2,
-      carbohydrates: 3,
-      calories: 4,
-      price: 5,
-      image: '',
-      image_large: '',
-      image_mobile: ''
-    };
+    const initialState = { ...burgerInitialState };
+    const addon = { ...bun1 };
+
     const expectedState = {
+      ...initialState,
       constructorItems: {
+        ...initialState.constructorItems,
         bun: {
-          _id: 'id',
-          id: expect.any(String),
-          name: 'name',
-          type: 'bun',
-          proteins: 1,
-          fat: 2,
-          carbohydrates: 3,
-          calories: 4,
-          price: 5,
-          image: '',
-          image_large: '',
-          image_mobile: ''
-        },
-        ingredients: []
-      },
-      error: null
+          ...addon,
+          id: expect.any(String)
+        }
+      }
     };
 
     const newState = constructorReducer(initialState, addIngredient(addon));
@@ -51,57 +33,27 @@ describe('Тесты редюсера constructorReducer', () => {
 
   test('addIngredient(bun replace)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
+        ...burgerInitialState.constructorItems,
         bun: {
-          _id: 'id1',
-          id: 'id1',
-          name: 'name1',
-          type: 'bun1',
-          proteins: 6,
-          fat: 7,
-          carbohydrates: 8,
-          calories: 9,
-          price: 10,
-          image: '1',
-          image_large: '1',
-          image_mobile: '1'
-        },
-        ingredients: []
-      },
-      error: null
+          ...bun1,
+          id: 'id1'
+        }
+      }
     };
-    const addon: TIngredient = {
-      _id: 'id',
-      name: 'name',
-      type: 'bun',
-      proteins: 1,
-      fat: 2,
-      carbohydrates: 3,
-      calories: 4,
-      price: 5,
-      image: '',
-      image_large: '',
-      image_mobile: ''
-    };
+
+    const addon = bun2;
+
     const expectedState = {
+      ...initialState,
       constructorItems: {
+        ...initialState.constructorItems,
         bun: {
-          _id: 'id',
-          id: expect.any(String),
-          name: 'name',
-          type: 'bun',
-          proteins: 1,
-          fat: 2,
-          carbohydrates: 3,
-          calories: 4,
-          price: 5,
-          image: '',
-          image_large: '',
-          image_mobile: ''
-        },
-        ingredients: []
-      },
-      error: null
+          ...bun2,
+          id: expect.any(String)
+        }
+      }
     };
 
     const newState = constructorReducer(initialState, addIngredient(addon));
@@ -111,75 +63,24 @@ describe('Тесты редюсера constructorReducer', () => {
 
   test('addIngredient(no bun)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
-        ingredients: [
-          {
-            _id: 'id',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }
-        ]
-      },
-      error: null
+        ...burgerInitialState.constructorItems,
+        ingredients: [main1]
+      }
     };
-    const addon: TIngredient = {
-      _id: 'id2',
-      name: 'name2',
-      type: 'main',
-      proteins: 6,
-      fat: 7,
-      carbohydrates: 8,
-      calories: 9,
-      price: 10,
-      image: '',
-      image_large: '',
-      image_mobile: ''
+
+    const addon = {
+      ...main2,
+      id: expect.any(String)
     };
+
     const expectedState = {
-constructorItems: {
-        bun: null,
-        ingredients: [
-          {
-            _id: 'id',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id2',
-            id: expect.any(String),
-            name: 'name2',
-            type: 'main',
-            proteins: 6,
-            fat: 7,
-            carbohydrates: 8,
-            calories: 9,
-            price: 10,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }
-        ]
-      },
-      error: null
+      ...initialState,
+      constructorItems: {
+        ...initialState.constructorItems,
+        ingredients: [...initialState.constructorItems.ingredients, addon]
+      }
     };
 
     const newState = constructorReducer(initialState, addIngredient(addon));
@@ -189,90 +90,41 @@ constructorItems: {
 
   test('removeIngredient', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
+
     const expectedState = {
+      ...initialState,
       constructorItems: {
-        bun: null,
+        ...initialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id3',
-            id: 'id',
-            name: 'name',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const actualState = constructorReducer(initialState, removeIngredient(1));
@@ -282,54 +134,24 @@ constructorItems: {
 
   test('moveIngredientUp (top)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const actualState = constructorReducer(initialState, moveIngredientUp(0));
@@ -339,106 +161,46 @@ constructorItems: {
 
   test('moveIngredientUp (non top)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
-    };
-    const expectedState = {
-      constructorItems: {
-        bun: null,
-        ingredients: [
-          {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }
-        ]
-      },
-      error: null
+      }
     };
 
+    const expectedState = {
+      ...burgerInitialState,
+      constructorItems: {
+        ...burgerInitialState.constructorItems,
+        ingredients: [
+          {
+            ...main2,
+            id: 'id2'
+          },
+          {
+            ...main1,
+            id: 'id1'
+          },
+          {
+            ...main3,
+            id: 'id3'
+          }
+        ]
+      }
+    };
 
     const actualState = constructorReducer(initialState, moveIngredientUp(1));
 
@@ -447,54 +209,24 @@ constructorItems: {
 
   test('moveIngredientDown (bottom)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const actualState = constructorReducer(initialState, moveIngredientDown(2));
@@ -504,105 +236,45 @@ constructorItems: {
 
   test('moveIngredientDown (non bottom)', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: null,
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const expectedState = {
+      ...initialState,
       constructorItems: {
-        bun: null,
+        ...initialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const actualState = constructorReducer(initialState, moveIngredientDown(1));
@@ -612,75 +284,28 @@ constructorItems: {
 
   test('clearConstructor', () => {
     const initialState = {
+      ...burgerInitialState,
       constructorItems: {
-        bun: {
-            _id: 'id',
-            id: 'id',
-            name: 'name',
-            type: 'bun',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
+        ...burgerInitialState.constructorItems,
         ingredients: [
           {
-            _id: 'id1',
-            id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main1,
+            id: 'id1'
           },
           {
-            _id: 'id2',
-            id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main2,
+            id: 'id2'
           },
           {
-            _id: 'id3',
-            id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
+            ...main3,
+            id: 'id3'
           }
         ]
-      },
-      error: null
+      }
     };
 
     const expectedState = {
-      constructorItems: {
-        bun: null,
-        ingredients: []
-      },
-      error: null
+      ...burgerInitialState
     };
 
     const actualState = constructorReducer(initialState, clearConstructor());

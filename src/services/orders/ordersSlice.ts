@@ -9,7 +9,7 @@ interface OrderData {
   error: string | null;
 }
 
-const initialState: OrderData = {
+export const initialState: OrderData = {
   orders: null,
   isLoading: false,
   error: null

@@ -12,7 +12,7 @@ interface ConstructorState {
   error: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   constructorItems: { bun: null, ingredients: [] },
   error: null
 };

@@ -1,285 +1,105 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { getIngredients, ingredientsReducer, selectIngredient } from "./ingredientsSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import {
+  getIngredients,
+  ingredientsReducer,
+  selectIngredient,
+  initialState as ingredientsInitialState
+} from './ingredientsSlice';
+import { error, main1, main2, main3 } from '../mockdata';
 
 describe('Тесты редюсера ingredientsReducer', () => {
   test('selectIngredient', () => {
     const initialState = {
-        ingredients: [
-          {
-            _id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }          
-        ],
-        selected: null,
-        isLoading: false,
-        error: null
+      ...ingredientsInitialState,
+      ingredients: [{ ...main1 }, { ...main2 }, { ...main3 }]
     };
 
     const expectedState = {
-        ingredients: [
-          {
-            _id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }          
-        ],
-        selected: {
-          _id: 'id2',
-          name: 'name2',
-          type: 'main',
-          proteins: 1,
-          fat: 2,
-          carbohydrates: 3,
-          calories: 4,
-          price: 5,
-          image: '',
-          image_large: '',
-          image_mobile: ''
-        },
-        isLoading: false,
-        error: null
+      ...initialState,
+      selected: {
+        ...main2
+      }
     };
 
-    const actualState = ingredientsReducer(initialState, selectIngredient('id2'));
+    const actualState = ingredientsReducer(
+      initialState,
+      selectIngredient('id2')
+    );
 
     expect(actualState).toEqual(expectedState);
   });
 
   test('getIngredients.pending', () => {
     const initialState = {
-      ingredients: [],
-        selected: null,
-        isLoading: false,
-        error: null
+      ...ingredientsInitialState
     };
 
     const expectedState = {
-      ingredients: [],
-        selected: null,
-        isLoading: true,
-        error: null
+      ...initialState,
+      isLoading: true
     };
 
-    const actualState = ingredientsReducer(initialState, {type: getIngredients.pending.type});
+    const actualState = ingredientsReducer(initialState, {
+      type: getIngredients.pending.type
+    });
 
     expect(actualState).toEqual(expectedState);
   });
 
   test('getIngredients.fulfilled', () => {
     const initialState = {
-      ingredients: [],
-        selected: null,
-        isLoading: true,
-        error: null
+      ...ingredientsInitialState,
+      isLoading: true
     };
 
-    const payload = [
-          {
-            _id: 'id1',
-            name: 'name1',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id2',
-            name: 'name2',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          },
-          {
-            _id: 'id3',
-            name: 'name3',
-            type: 'main',
-            proteins: 1,
-            fat: 2,
-            carbohydrates: 3,
-            calories: 4,
-            price: 5,
-            image: '',
-            image_large: '',
-            image_mobile: ''
-          }          
-        ];
+    const payload = [{ ...main1 }, { ...main2 }, { ...main3 }];
 
     const expectedState = {
+      ...initialState,
       ingredients: payload,
-      selected: null,
-      isLoading: false,
-      error: null
+      isLoading: false
     };
 
-    const actualState = ingredientsReducer(
-      initialState, 
-      {
-        type: getIngredients.fulfilled.type,
-        payload: payload
-      });
+    const actualState = ingredientsReducer(initialState, {
+      type: getIngredients.fulfilled.type,
+      payload: payload
+    });
 
     expect(actualState).toEqual(expectedState);
   });
 
   test('getIngredients.rejected', () => {
     const initialState = {
-      ingredients: [],
-        selected: null,
-        isLoading: true,
-        error: null
+      ...ingredientsInitialState,
+      isLoading: true
     };
-
-    const error = "Видимо что-то случилось";
 
     const expectedState = {
-      ingredients: [],
-        selected: null,
-        isLoading: false,
-        error: error
+      ...initialState,
+      isLoading: false,
+      error: error
     };
 
-    const actualState = ingredientsReducer(
-      initialState, 
-      {
-        type: getIngredients.rejected.type,
-        payload: error
-      });
+    const actualState = ingredientsReducer(initialState, {
+      type: getIngredients.rejected.type,
+      payload: error
+    });
 
     expect(actualState).toEqual(expectedState);
   });
 
   test('getIngredients', async () => {
-    const expected = [
-      {
-        _id: 'id1',
-        name: 'name1',
-        type: 'main',
-        proteins: 1,
-        fat: 2,
-        carbohydrates: 3,
-        calories: 4,
-        price: 5,
-        image: '',
-        image_large: '',
-        image_mobile: ''
-      },
-      {
-        _id: 'id2',
-        name: 'name2',
-        type: 'main',
-        proteins: 1,
-        fat: 2,
-        carbohydrates: 3,
-        calories: 4,
-        price: 5,
-        image: '',
-        image_large: '',
-        image_mobile: ''
-      },
-      {
-        _id: 'id3',
-        name: 'name3',
-        type: 'main',
-        proteins: 1,
-        fat: 2,
-        carbohydrates: 3,
-        calories: 4,
-        price: 5,
-        image: '',
-        image_large: '',
-        image_mobile: ''
-      }          
-    ];
+    const expected = [{ ...main1 }, { ...main2 }, { ...main3 }];
 
     const expectedResult = {
       success: true,
       data: expected
-    }
+    };
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(expectedResult),
+        json: () => Promise.resolve(expectedResult)
       })
     ) as jest.Mock;
 
@@ -290,7 +110,7 @@ describe('Тесты редюсера ingredientsReducer', () => {
     await store.dispatch(getIngredients());
 
     const { ingredients } = store.getState().ingredients;
-      
+
     expect(ingredients).toEqual(expected);
   });
 });
