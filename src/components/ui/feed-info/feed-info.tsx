@@ -15,8 +15,13 @@ export const FeedInfoUI: FC<FeedInfoUIProps> = memo(
             orders={readyOrders}
             title={'Готовы'}
             textColor={'blue'}
+            name='complete'
           />
-          <HalfColumn orders={pendingOrders} title={'В работе'} />
+          <HalfColumn
+            orders={pendingOrders}
+            title={'В работе'}
+            name='pending'
+          />
         </div>
         <Column title={'Выполнено за все время'} content={total} />
         <Column title={'Выполнено за сегодня'} content={totalToday} />
@@ -25,10 +30,15 @@ export const FeedInfoUI: FC<FeedInfoUIProps> = memo(
   }
 );
 
-const HalfColumn: FC<HalfColumnProps> = ({ orders, title, textColor }) => (
+const HalfColumn: FC<HalfColumnProps> = ({
+  orders,
+  title,
+  textColor,
+  name
+}) => (
   <div className={`pr-6 ${styles.column}`}>
     <h3 className={`text text_type_main-medium ${styles.title}`}>{title}:</h3>
-    <ul className={`pt-6  ${styles.list}`}>
+    <ul className={`pt-6  ${styles.list}`} data-cy={`halfcolumn-${name}`}>
       {orders.map((item, index) => (
         <li
           className={`text text_type_digits-default ${styles.list_item}`}
@@ -47,6 +57,11 @@ const Column: FC<TColumnProps> = ({ title, content }) => (
     <h3 className={`pt-15 text text_type_main-medium ${styles.title}`}>
       {title}:
     </h3>
-    <p className={`text text_type_digits-large ${styles.content}`}>{content}</p>
+    <p
+      className={`text text_type_digits-large ${styles.content}`}
+      data-cy={`column-${title}`}
+    >
+      {content}
+    </p>
   </>
 );

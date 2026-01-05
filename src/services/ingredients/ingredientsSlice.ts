@@ -15,7 +15,7 @@ interface IngredientsState {
   error: string | null;
 }
 
-const initialState: IngredientsState = {
+export const initialState: IngredientsState = {
   ingredients: [],
   selected: null,
   isLoading: false,
@@ -64,7 +64,6 @@ const ingredientsSlice = createSlice({
       });
   }
 });
-
 export const { selectIngredient } = ingredientsSlice.actions;
 
 export const ingredientsReducer = ingredientsSlice.reducer;

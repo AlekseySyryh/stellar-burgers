@@ -12,7 +12,7 @@ interface ConstructorState {
   error: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   constructorItems: { bun: null, ingredients: [] },
   error: null
 };
@@ -81,4 +81,4 @@ export const {
   clearConstructor
 } = burgerConstructorSlice.actions;
 
-export const constuctorReducer = burgerConstructorSlice.reducer;
+export const constructorReducer = burgerConstructorSlice.reducer;

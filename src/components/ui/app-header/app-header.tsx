@@ -19,6 +19,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           className={({ isActive }) =>
             clsx(styles.link, { [styles.link_active]: isActive })
           }
+          data-cy='constructor'
         >
           {({ isActive }) => (
             <>
@@ -59,6 +60,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           className={({ isActive }) =>
             clsx(styles.link, { [styles.link_active]: isActive })
           }
+          data-cy='profile'
         >
           {({ isActive }) => (
             <>

@@ -19,7 +19,7 @@ interface UserData {
   registerError: string | undefined;
 }
 
-const initialState: UserData = {
+export const initialState: UserData = {
   user: null,
   isLoading: false,
   loginError: undefined,
